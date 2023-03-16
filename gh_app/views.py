@@ -5,5 +5,4 @@ from django.views import View
 
 class MainView(View):
     def get(self, request):
-        return HttpResponse("hello world")
-#        return render(request, 'main_page.html')
+        return render(request, 'index.html')
