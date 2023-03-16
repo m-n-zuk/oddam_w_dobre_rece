@@ -27,7 +27,7 @@
 
 ## Technologies Used
 - Python - version 3.11
-- Django - version 2.0
+- Django - version 4.1.7
 
 
 ## Features
