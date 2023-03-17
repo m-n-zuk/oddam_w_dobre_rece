@@ -14,9 +14,18 @@ class LandingPage(View):
         for donation in donations:
             donations_quantity += donation.quantity
 
-        institutions_quantity = Institution.objects.all().count() - Institution.objects.filter(donation=None).count()
+        institutions = Institution.objects.filter(donation__isnull=False)
+        institutions_quantity = institutions.count()
 
-        return render(request, 'index.html', {"d_quantity": donations_quantity, "i_quantity": institutions_quantity})
+        foundations = institutions.filter(type=1)
+        organisations = institutions.filter(type=2)
+        collections = institutions.filter(type=3)
+
+        return render(request, 'index.html', {"d_quantity": donations_quantity,
+                                              "i_quantity": institutions_quantity,
+                                              "foundations": foundations,
+                                              "organisations": organisations,
+                                              "collections": collections})
 
 
 class AddDonation(View):
