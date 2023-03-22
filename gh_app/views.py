@@ -18,13 +18,15 @@ class LandingPage(View):
         institutions_quantity = institutions.count()
 
         foundations = institutions.filter(type=1)
-        organisations = institutions.filter(type=2)
+        print(foundations)
+        organizations = institutions.filter(type=2)
+        print(organizations)
         collections = institutions.filter(type=3)
-
+        print(collections)
         return render(request, 'index.html', {"d_quantity": donations_quantity,
                                               "i_quantity": institutions_quantity,
                                               "foundations": foundations,
-                                              "organisations": organisations,
+                                              "organizations": organizations,
                                               "collections": collections})
 
 

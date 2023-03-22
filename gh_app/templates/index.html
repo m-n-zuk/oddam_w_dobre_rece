@@ -77,6 +77,11 @@
         </ul>
 
         <!-- SLIDE 1 -->
+        {% if foundations.count == 0 %}
+            <div class="help--slides" data-id="3">
+                <p> Brak fundacji.</p>
+            </div>
+        {% else %}
         <div class="help--slides active" data-id="1">
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
                 Możesz sprawdzić, czym się zajmują, komu pomagają i czego potrzebują.</p>
@@ -101,17 +106,23 @@
 
 
             </ul>
-            <!-- Pagination
+            <!-- Pagination -->
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+                <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+                <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+                <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
             </ul>
-            -->
+
         </div>
+        {% endif %}
 
 
         <!-- SLIDE 2 -->
+        {% if organizations.count == 0 %}
+            <div class="help--slides" data-id="3">
+                <p> Brak organizacji.</p>
+            </div>
+        {% else %}
         <div class="help--slides" data-id="2">
             <p>
                 Lorem ipsum dolor, sit amet consectetur adipisicing elit. Hic officiis mollitia dolor, neque aspernatur
@@ -134,103 +145,48 @@
                     </li>
 
                 {% endfor %}
-
-                <li>
-                    <div class="col">
-                        <div class="title">Organizacja 2</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="col">
-                        <div class="title">Organizacja 3</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="col">
-                        <div class="title">Organizacja 4</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
             </ul>
-
-            <!-- Pagination
+            <!-- Pagination -->
             <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="4">4</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="5">5</a></li>
+                <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+                <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
             </ul>
-            -->
+
         </div>
+        {% endif %}
 
         <!-- SLIDE 3 -->
-        <div class="help--slides" data-id="3">
-            <p>Lorem ipsum dolor sit amet, his ocurreret persequeris ea, ad utinam laudem duo. Verterem adipisci
-                partiendo eos ne, ea his reque quaeque recteque, ne quo lobortis intellegam.</p>
-            <ul class="help--slides-items">
+        {% if collections.count == 0 %}
+            <div class="help--slides" data-id="3">
+                <p> Brak lokalnych zbiórek.</p>
+            </div>
+        {% else %}
+            <div class="help--slides" data-id="3">
+                <p>Lorem ipsum dolor sit amet, his ocurreret persequeris ea, ad utinam laudem duo. Verterem adipisci
+                    partiendo eos ne, ea his reque quaeque recteque, ne quo lobortis intellegam.</p>
+                <ul class="help--slides-items">
+                    {% for collection in collections %}
+                        <li>
+                            <div class="col">
+                                <div class="title">Zbiórka "{{ collection.name }}"</div>
+                                <div class="subtitle">Cel i misja: {{ collection.description }}</div>
+                            </div>
 
-                {% for collection in collections %}
+                            <div class="col">
+                                <div class="text">ubrania, jedzenie, sprzęt AGD, meble, zabawki</div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
 
-                    <li>
-                        <div class="col">
-                            <div class="title">Zbiórka "{{ collection.name }}"</div>
-                            <div class="subtitle">Cel i misja: {{ collection.description }}</div>
-                        </div>
+                <!-- Pagination -->
+                <ul class="help--slides-pagination">
+                    <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+                    <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+                </ul>
+            </div>
+        {% endif %}
 
-                        <div class="col">
-                            <div class="text">ubrania, jedzenie, sprzęt AGD, meble, zabawki</div>
-                        </div>
-                    </li>
-
-                {% endfor %}
-
-                <li>
-                    <div class="col">
-                        <div class="title">Lokalna zbiórka 1</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
-
-                <li>
-                    <div class="col">
-                        <div class="title">Lokalna zbiórka 2</div>
-                        <div class="subtitle">Lorem ipsum dolor sit amet consectetur.</div>
-                    </div>
-
-                    <div class="col">
-                        <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-                    </div>
-                </li>
-            </ul>
-
-            <!-- Pagination
-            <ul class="help--slides-pagination">
-              <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-              <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-            </ul>
-            -->
-        </div>
     </section>
 
 {% endblock %}
