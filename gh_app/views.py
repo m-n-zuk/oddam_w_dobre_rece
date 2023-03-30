@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, password_validation, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
@@ -12,7 +13,9 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views import View
 
-from gh_app.models import Donation, Institution
+from gh_app.models import Donation, Institution, Category
+
+
 # from gh_app.tokens import account_activation_token
 
 
@@ -40,9 +43,13 @@ class LandingPage(View):
                                               "collections": collections})
 
 
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'form.html')
+
+        categories = Category.objects.all()
+        foundations = Institution.objects.all()
+        return render(request, 'form.html', {"categories": categories,
+                                             "foundations": foundations})
 
 
 # def activate_email(user, request, to_email):
