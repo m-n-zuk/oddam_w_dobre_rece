@@ -19,8 +19,13 @@ from gh_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.LandingPage.as_view(), name="landing_page"),
-    path('register/', views.Register.as_view(), name="register"),
-    path('login/', views.Login.as_view(), name="login"),
-    path('add-donation/', views.AddDonation.as_view(), name="add_donation"),
+    path('', views.LandingPage.as_view(), name='landing_page'),
+    path('register/', views.Register.as_view(), name='register'),
+    path('login/', views.Login.as_view(), name='login'),
+    path('logout/', views.Logout.as_view(), name='logout'),
+    path('user/', views.UserView.as_view(), name='user'),
+    path('donated/', views.Donated.as_view(), name='donated'),
+    path('donate-confirmation/', views.DonateConfirmation.as_view(), name='don_conf'),
+    path('edit/<int:id>/', views.EditUser.as_view(), name='edit'),
+    path('add-donation/', views.AddDonation.as_view(), name='add_donation'),
 ]

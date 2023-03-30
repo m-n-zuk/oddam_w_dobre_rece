@@ -12,22 +12,28 @@
 <body>
 <header class="header--main-page">
     <nav class="container container--70">
-        <ul class="nav--actions">
 
-            {% if user is authenicated %}
+        {% if user.is_authenticated %}
+            <ul class="nav--actions">
                 <li class="logged-user">
-                    Witaj Agata
+                    Witaj {{ user.first_name }}
                     <ul class="dropdown">
-                        <li><a href="#">Profil</a></li>
-                        <li><a href="#">Ustawienia</a></li>
-                        <li><a href="#">Wyloguj</a></li>
+                        <li><a href="{% url 'user' %}">Profil</a></li>
+                        <li><a href="{% url 'donated' %}">Moje zbiórki</a></li>
+                        <li><a href="{% url 'edit' user.id %}">Ustawienia</a></li>
+                        {% if user.is_superuser %}
+                            <li><a href="{% url 'admin:index' %}">Panel administracyjny</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'logout' %}">Wyloguj</a></li>
                     </ul>
                 </li>
-            {% endif %}
-
-            <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
-            <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
-        </ul>
+            </ul>
+        {% else %}
+            <ul class="nav--actions">
+                <li><a href="{% url 'login' %}#login" class="btn btn--small btn--without-border">Zaloguj</a></li>
+                <li><a href="{% url 'register' %}#register" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+            </ul>
+        {% endif %}
 
         <ul>
             <li><a href="{% url 'landing_page' %}" class="btn btn--without-border active">Start</a></li>
