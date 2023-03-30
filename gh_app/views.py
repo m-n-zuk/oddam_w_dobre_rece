@@ -47,9 +47,9 @@ class AddDonation(LoginRequiredMixin, View):
     def get(self, request):
 
         categories = Category.objects.all()
-        foundations = Institution.objects.all()
+        institutions = Institution.objects.all()
         return render(request, 'form.html', {"categories": categories,
-                                             "foundations": foundations})
+                                             "institutions": institutions})
 
 
 # def activate_email(user, request, to_email):
