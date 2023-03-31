@@ -11,11 +11,13 @@
 
     <section class="login-page" id="register">
         <h2>Załóż konto</h2>
+
+        {% if error_msg %}
+            <div><h3>{{ error_msg }}</h3></div>
+        {% endif %}
+
         <form method="POST">
             {% csrf_token %}
-            {% if error_msg %}
-                <div><h3>{{ error_msg }}</h3></div>
-            {% endif %}
             <div class="form-group">
                 <input type="text" name="name" placeholder="Imię"/>
             </div>

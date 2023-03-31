@@ -8,21 +8,17 @@
 {% block content %}
 
     <section class="login-page" id="user">
-            <h2>DANE UŻYTKOWNIKA <br>{{ user.username }}: </h2>
+            <h2>DANE UŻYTKOWNIKA <br>{{ user.username }} </h2>
         <h1>
             <ul>
-                <li> imię i nazwisko:</li>
-                <br>
-                {{ user.first_name }} {{ user.last_name }} <br><br><br>
-                <li> email:</li>
-                <br>
-                {{ user.username }} <br><br><br>
+                <li>imię i nazwisko: {{ user.first_name }} {{ user.last_name }} </li> <br><br>
+                <li>email: {{ user.username }} </li> <br><br>
             </ul>
         </h1>
     </section>
 
     <section class="login-page">
-        <h2>ODDANE DARY:</h2>
+        <h2>ODDANE DARY</h2>
         {% for donation in donations %}
             <h1>
                 <ul>

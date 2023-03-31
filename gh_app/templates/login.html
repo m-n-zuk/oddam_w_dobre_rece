@@ -11,6 +11,11 @@
 
     <section class="login-page" id="login">
         <h2>Zaloguj się</h2>
+
+        {% if error_msg %}
+            <div><h3>{{ error_msg }}</h3></div>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
             <div class="form-group">

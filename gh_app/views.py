@@ -100,9 +100,7 @@ class Register(View):
                                         username=username,
                                         password=password,
                                         is_active=False)
-        
-        # activate_email(user, request, user.username)
-        # messages.success(request, "Sprawdź pocztę")
+
         return redirect(reverse("login"))
 
 
@@ -118,8 +116,10 @@ class Login(View):
             login(request, user)
             return redirect(reverse('landing_page'))
         else:
-            messages.error(request, "Błędne dane!")
-            return redirect(reverse('register'))
+            # messages.error(request, "Błędne dane!")  # WYSWIETLA SIE W INNYM MIEJSCU
+            # return redirect(reverse('register'))
+            error_msg = "Podano błędne dane!"
+            return render(request, "login.html", {'error_msg': error_msg})
 
 
 class Logout(View):
