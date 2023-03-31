@@ -128,24 +128,15 @@ class Logout(View):
         return redirect(reverse('landing_page'))
 
 
-class UserView(View):
+class UserView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'user.html')
-
-
-class Donated(View):
-    def get(self):
-        pass
-
-    def post(self):
-        pass
+        user = request.user
+        donations = Donation.objects.filter(user=user).order_by("pick_up_date", "pick_up_date")
+        return render(request, 'user.html', {"donations": donations})
 
 
 class DonateConfirmation(View):
     def get(self):
-        pass
-
-    def post(self):
         pass
 
 
