@@ -1,0 +1,24 @@
+{% extends '__base__.html' %}
+{% load static %}
+
+{% block title %}
+    {{ user.first_name }} {{ user.last_name }}
+{% endblock %}
+
+{% block content %}
+
+    <section class="login-page" id="login">
+        <h2>Dane użytkownika {{ user.username }}: </h2>
+        <h1>
+            <ul>
+            <li> imię:</li><br>
+            {{ user.first_name }} <br><br><br>
+            <li> nazwisko: </li><br>
+            {{ user.last_name }} <br><br><br>
+            <li> email: </li><br>
+            {{ user.username }} <br><br><br>
+            </ul>
+        </h1>
+    </section>
+
+{% endblock %}

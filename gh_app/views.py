@@ -129,11 +129,8 @@ class Logout(View):
 
 
 class UserView(View):
-    def get(self):
-        pass
-
-    def post(self):
-        pass
+    def get(self, request):
+        return render(request, 'user.html')
 
 
 class Donated(View):
