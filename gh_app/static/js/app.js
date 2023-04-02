@@ -210,6 +210,8 @@ document.addEventListener("DOMContentLoaded", function() {
         });
       });
 
+
+
       // Form submit
       this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
     }
@@ -222,6 +224,8 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.innerText = this.currentStep;
 
       // TODO: Validation
+
+
 
       this.slides.forEach(slide => {
         slide.classList.remove("active");
@@ -252,4 +256,25 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+});
+
+
+      // selected categories
+const selectedCategories = [];
+const categoryCheckboxes = document.querySelectorAll('.form-group--checkbox > label > input[type="checkbox"]');
+categoryCheckboxes.forEach(function(category) {
+  if (category.checked) {
+    selectedCategories.push(category.value);
+  }
+});
+
+// show only checked cat
+const institutions = document.querySelectorAll('.foundations-list');
+institutions.forEach((institution) => {
+        institution.parentElement.parentElement.removeAttribute('style')
+        const foundationCategories = institution.dataset.category.split(',')
+        const isChosenCategory = selectedCategories.some(category => foundationCategories.includes(category))
+        if (isChosenCategory === false) {
+            institution.parentElement.parentElement.style.display = "none"
+        }
 });
