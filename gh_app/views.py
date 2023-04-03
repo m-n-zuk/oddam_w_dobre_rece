@@ -52,18 +52,6 @@ class AddDonation(LoginRequiredMixin, View):
                                              "institutions": institutions})
 
 
-# def activate_email(user, request, to_email):
-#     mail_subject = "Activate your account"
-#     message = render_to_string('activate_account.html', {'user': user.first_name,
-#                                                          'domain': get_current_site(request).domain,
-#                                                          'uid': urlsafe_base64_encode(force_bytes(user.id)),
-#                                                          'token': account_activation_token.make_token(user),
-#                                                          'protocol': 'https' if request.is_secure() else 'http'})
-#
-#     email = EmailMessage(mail_subject, message, to=[to_email])
-#     email.send()
-#
-
 class Register(View):
     def get(self, request):
         return render(request, 'register.html')
@@ -141,8 +129,69 @@ class DonateConfirmation(View):
 
 
 class EditUser(View):
-    def get(self):
-        pass
+    def get(self, request, id):
 
-    def post(self):
-        pass
+        user = User.objects.get(id=id)
+        logged_user = request.user
+
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        return render(request, 'edit_user.html')
+
+    def post(self, request, id):
+
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+
+        user.save()
+
+        return redirect(reverse('user'))
+
+
+class EditPassword(View):
+    def get(self, request, id):
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+        return render(request, 'edit_password.html')
+
+    def post(self, request, id):
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        old_password = request.POST.get('old_password')
+
+        if password1 != password2:
+            error_msg = "Podane hasła nie są takie same!"
+            return render(request, "edit_password.html", {'error_msg': error_msg})
+
+        if user.check_password(old_password) is False:
+            error_msg = "Błędne hasło!"
+            return render(request, "edit_password.html", {'error_msg': error_msg})
+
+        try:
+            password_validation.validate_password(password1)
+        except ValidationError as error:
+            error_msg = str(error.messages)
+            return render(request, "edit_password.html", {'error_msg': error_msg})
+
+        user.set_password(password1)
+        user.save()
+        return redirect(reverse('user'))
+
