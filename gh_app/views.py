@@ -149,11 +149,15 @@ class EditUser(View):
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
+        password = request.POST['password1']
+
+        if user.check_password(password) is False:
+            error_msg = "Błędne hasło!"
+            return render(request, "edit_user.html", {'error_msg': error_msg})
 
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
-
         user.save()
 
         return redirect(reverse('user'))
@@ -185,13 +189,7 @@ class EditPassword(View):
             error_msg = "Błędne hasło!"
             return render(request, "edit_password.html", {'error_msg': error_msg})
 
-        try:
-            password_validation.validate_password(password1)
-        except ValidationError as error:
-            error_msg = str(error.messages)
-            return render(request, "edit_password.html", {'error_msg': error_msg})
-
         user.set_password(password1)
         user.save()
-        return redirect(reverse('user'))
 
+        return redirect(reverse('user'))
