@@ -192,4 +192,4 @@ class EditPassword(View):
         user.set_password(password1)
         user.save()
 
-        return redirect(reverse('user'))
+        return redirect(reverse('login'))
