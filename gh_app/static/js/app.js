@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateForm() {
             this.$step.innerText = this.currentStep;
 
-            // TODO: Validation
+            // show institutions connected with chosen categories
 
             const institutions = document.querySelectorAll('.foundations-list');
             institutions.forEach((institution) => {
