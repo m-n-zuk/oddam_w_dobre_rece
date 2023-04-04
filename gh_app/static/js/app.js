@@ -212,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             });
 
-
             // Form submit
             this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
         }
@@ -251,7 +250,6 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-            // TODO: get data from inputs and show them in summary
         }
 
         /**
@@ -259,6 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
          *
          * TODO: validation, send data to server
          */
+
         submit(e) {
             e.preventDefault();
             this.currentStep++;
@@ -270,4 +269,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (form !== null) {
         new FormSteps(form);
     }
+
 });

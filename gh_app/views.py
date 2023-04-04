@@ -113,38 +113,6 @@ class UserView(LoginRequiredMixin, View):
         donations = Donation.objects.filter(user=user).order_by("pick_up_date", "pick_up_date")
         return render(request, 'user.html', {"donations": donations})
 
-    def post(self, request):
-
-        categories = request.POST.getlist('categories')
-        quantity = request.POST.get('bags')
-        institution_name = request.POST.get('institution')
-        address = request.POST.get('address')
-        city = request.POST.get('city')
-        zip_code = request.POST.get('postcode')
-        phone_number = request.POST.get('phone')
-        pick_up_date = request.POST.get('data')
-        pick_up_time = request.POST.get('time')
-        pick_up_comment = request.POST.get('more_info')
-        user = request.user
-
-        try:
-            institution = Institution.objects.get(name=institution_name)
-        except ObjectDoesNotExist:
-            return redirect(reverse('add_donation'))
-
-        donation = Donation.objects.create(quantity=quantity, institution=institution, address=address,
-                                           phone_number=phone_number, city=city, zip_code=zip_code,
-                                           pick_up_date=pick_up_date, pick_up_time=pick_up_time,
-                                           pick_up_comment=pick_up_comment, user=user)
-
-        for category in categories:
-            try:
-                donation.categories.add(Category.objects.get(name=category))
-            except ObjectDoesNotExist:
-                continue
-
-        return redirect(reverse('donate_confirmation'))
-
 
 class AddDonation(LoginRequiredMixin, View):
     def get(self, request):
@@ -153,6 +121,38 @@ class AddDonation(LoginRequiredMixin, View):
         institutions = Institution.objects.all()
         return render(request, 'form.html', {"categories": categories,
                                              "institutions": institutions})
+
+    # def post(self, request):
+    #
+    #     categories = request.POST.getlist('categories')
+    #     quantity = request.POST.get('bags')
+    #     institution_name = request.POST.get('institution')
+    #     address = request.POST.get('address')
+    #     city = request.POST.get('city')
+    #     zip_code = request.POST.get('postcode')
+    #     phone_number = request.POST.get('phone')
+    #     pick_up_date = request.POST.get('data')
+    #     pick_up_time = request.POST.get('time')
+    #     pick_up_comment = request.POST.get('more_info')
+    #     user = request.user
+    #
+    #     try:
+    #         institution = Institution.objects.get(name=institution_name)
+    #     except ObjectDoesNotExist:
+    #         return redirect(reverse('add_donation'))
+    #
+    #     donation = Donation.objects.create(quantity=quantity, institution=institution, address=address,
+    #                                        phone_number=phone_number, city=city, zip_code=zip_code,
+    #                                        pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+    #                                        pick_up_comment=pick_up_comment, user=user)
+    #
+    #     for category in categories:
+    #         try:
+    #             donation.categories.add(Category.objects.get(name=category))
+    #         except ObjectDoesNotExist:
+    #             continue
+    #
+    #     return redirect(reverse('donate_confirmation'))
 
 
 class DonateConfirmation(View):
