@@ -18,8 +18,7 @@
                 <li class="logged-user">
                     Witaj {{ user.first_name }}
                     <ul class="dropdown">
-                        <li><a href="{% url 'user' %}">Profil</a></li>
-                        <li><a href="{% url 'donated' %}">Moje zbiórki</a></li>
+                        <li><a href="{% url 'user' %}#user">Profil</a></li>
                         <li><a href="{% url 'edit' user.id %}">Ustawienia</a></li>
                         {% if user.is_superuser %}
                             <li><a href="{% url 'admin:index' %}">Panel administracyjny</a></li>
@@ -40,7 +39,11 @@
             <li><a href="{% url 'landing_page' %}#steps" class="btn btn--without-border">O co chodzi?</a></li>
             <li><a href="{% url 'landing_page' %}#about-us" class="btn btn--without-border">O nas</a></li>
             <li><a href="{% url 'landing_page' %}#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
-            <li><a href="{% url 'add_donation' %}#add" class="btn btn--without-border">Przekaż dary</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'add_donation' %}#add" class="btn btn--without-border">Przekaż dary</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}#login" class="btn btn--without-border">Przekaż dary</a></li>
+            {% endif %}
             <li><a href="{% url 'landing_page' %}#contact" class="btn btn--without-border">Kontakt</a></li>
         </ul>
     </nav>

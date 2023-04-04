@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, password_validation, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.core.validators import validate_email
 from django.http import HttpResponse
@@ -12,7 +13,9 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.views import View
 
-from gh_app.models import Donation, Institution
+from gh_app.models import Donation, Institution, Category
+
+
 # from gh_app.tokens import account_activation_token
 
 
@@ -39,23 +42,6 @@ class LandingPage(View):
                                               "organizations": organizations,
                                               "collections": collections})
 
-
-class AddDonation(View):
-    def get(self, request):
-        return render(request, 'form.html')
-
-
-# def activate_email(user, request, to_email):
-#     mail_subject = "Activate your account"
-#     message = render_to_string('activate_account.html', {'user': user.first_name,
-#                                                          'domain': get_current_site(request).domain,
-#                                                          'uid': urlsafe_base64_encode(force_bytes(user.id)),
-#                                                          'token': account_activation_token.make_token(user),
-#                                                          'protocol': 'https' if request.is_secure() else 'http'})
-#
-#     email = EmailMessage(mail_subject, message, to=[to_email])
-#     email.send()
-#
 
 class Register(View):
     def get(self, request):
@@ -93,9 +79,7 @@ class Register(View):
                                         username=username,
                                         password=password,
                                         is_active=False)
-        
-        # activate_email(user, request, user.username)
-        # messages.success(request, "Sprawdź pocztę")
+
         return redirect(reverse("login"))
 
 
@@ -111,8 +95,10 @@ class Login(View):
             login(request, user)
             return redirect(reverse('landing_page'))
         else:
-            messages.error(request, "Błędne dane!")
-            return redirect(reverse('register'))
+            # messages.error(request, "Błędne dane!")  # WYSWIETLA SIE W INNYM MIEJSCU
+            # return redirect(reverse('register'))
+            error_msg = "Podano błędne dane!"
+            return render(request, "login.html", {'error_msg': error_msg})
 
 
 class Logout(View):
@@ -121,33 +107,121 @@ class Logout(View):
         return redirect(reverse('landing_page'))
 
 
-class UserView(View):
-    def get(self):
-        pass
+class UserView(LoginRequiredMixin, View):
+    def get(self, request):
+        user = request.user
+        donations = Donation.objects.filter(user=user).order_by("pick_up_date", "pick_up_date")
+        return render(request, 'user.html', {"donations": donations})
 
-    def post(self):
-        pass
 
+class AddDonation(LoginRequiredMixin, View):
+    def get(self, request):
 
-class Donated(View):
-    def get(self):
-        pass
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, 'form.html', {"categories": categories,
+                                             "institutions": institutions})
 
-    def post(self):
-        pass
+    # def post(self, request):
+    #
+    #     categories = request.POST.getlist('categories')
+    #     quantity = request.POST.get('bags')
+    #     institution_name = request.POST.get('institution')
+    #     address = request.POST.get('address')
+    #     city = request.POST.get('city')
+    #     zip_code = request.POST.get('postcode')
+    #     phone_number = request.POST.get('phone')
+    #     pick_up_date = request.POST.get('data')
+    #     pick_up_time = request.POST.get('time')
+    #     pick_up_comment = request.POST.get('more_info')
+    #     user = request.user
+    #
+    #     try:
+    #         institution = Institution.objects.get(name=institution_name)
+    #     except ObjectDoesNotExist:
+    #         return redirect(reverse('add_donation'))
+    #
+    #     donation = Donation.objects.create(quantity=quantity, institution=institution, address=address,
+    #                                        phone_number=phone_number, city=city, zip_code=zip_code,
+    #                                        pick_up_date=pick_up_date, pick_up_time=pick_up_time,
+    #                                        pick_up_comment=pick_up_comment, user=user)
+    #
+    #     for category in categories:
+    #         try:
+    #             donation.categories.add(Category.objects.get(name=category))
+    #         except ObjectDoesNotExist:
+    #             continue
+    #
+    #     return redirect(reverse('donate_confirmation'))
 
 
 class DonateConfirmation(View):
-    def get(self):
-        pass
-
-    def post(self):
-        pass
+    def get(self, request):
+        return render(request, "form-confirmation.html")
 
 
 class EditUser(View):
-    def get(self):
-        pass
+    def get(self, request, id):
 
-    def post(self):
-        pass
+        user = User.objects.get(id=id)
+        logged_user = request.user
+
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        return render(request, 'edit_user.html')
+
+    def post(self, request, id):
+
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password1']
+
+        if user.check_password(password) is False:
+            error_msg = "Błędne hasło!"
+            return render(request, "edit_user.html", {'error_msg': error_msg})
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+
+        return redirect(reverse('user'))
+
+
+class EditPassword(View):
+    def get(self, request, id):
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+        return render(request, 'edit_password.html')
+
+    def post(self, request, id):
+        user = User.objects.get(id=id)
+        logged_user = request.user
+        if logged_user != user:
+            return redirect(reverse('landing_page'))
+
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        old_password = request.POST.get('old_password')
+
+        if password1 != password2:
+            error_msg = "Podane hasła nie są takie same!"
+            return render(request, "edit_password.html", {'error_msg': error_msg})
+
+        if user.check_password(old_password) is False:
+            error_msg = "Błędne hasło!"
+            return render(request, "edit_password.html", {'error_msg': error_msg})
+
+        user.set_password(password1)
+        user.save()
+
+        return redirect(reverse('login'))
