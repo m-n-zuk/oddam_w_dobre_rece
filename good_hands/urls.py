@@ -30,6 +30,6 @@ urlpatterns = [
     path('edit_password/<int:id>/', views.EditPassword.as_view(), name='edit_password'),
 
     path('add-donation/', views.AddDonation.as_view(), name='add_donation'),
-    path('donate-confirmation/', views.DonateConfirmation.as_view(), name='don_conf'),
+    path('donate-confirmation/', views.DonateConfirmation.as_view(), name='donate_confirmation'),
 
 ]
